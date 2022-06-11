@@ -1,0 +1,4 @@
+ID;carrid;carrname;schedules;credit_id;currcode;url;country_Country;
+20466921-7d57-4e76-b14c-e53fd97dcb11;AA;America Airline;3;20466921-7d57-4e76-b14c-e53fd97dcb14;USD;http://www.aa.com;AD;
+20466921-7d57-4e76-b14c-e53fd97dcb12;CA;Canada Airline;10;20466921-7d57-4e76-b14c-e53fd97dcb15;CAD;http://www.aircanada.com;AE;
+20466921-7d57-4e76-b14c-e53fd97dcb13;LH;Luftansa;7;20466921-7d57-4e76-b14c-e53fd97dcb16;EUR;http://lufutansa.commm;AF;

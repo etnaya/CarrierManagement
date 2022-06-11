@@ -1,0 +1,12 @@
+# Generated services-manifest.yml based on template version 0.1.0
+# appName = carrier-management
+---
+create-services:
+# ------------------------------------------------------------
+  - name:   carrier-management-db
+    broker: hana  # 'hanatrial' on trial landscapes
+    plan: "hdi-shared"
+# ------------------------------------------------------------
+  - name:   carrier-management-xsuaa
+    broker: xsuaa
+    plan: "application"

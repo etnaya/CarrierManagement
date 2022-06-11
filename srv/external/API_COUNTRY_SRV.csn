@@ -1,0 +1,139 @@
+{
+  "meta": {
+    "creator": "cds-dk 4.8.2"
+  },
+  "$version": "2.0",
+  "definitions": {
+    "API_COUNTRY_SRV": {
+      "kind": "service",
+      "@cds.external": true,
+      "@m.IsDefaultEntityContainer": "true",
+      "@sap.message.scope.supported": "true",
+      "@sap.supported.formats": "atom json xlsx"
+    },
+    "API_COUNTRY_SRV.A_Country": {
+      "kind": "entity",
+      "@cds.persistence.skip": true,
+      "@sap.creatable": "false",
+      "@sap.updatable": "false",
+      "@sap.deletable": "false",
+      "@sap.content.version": "1",
+      "@sap.label": "Country/Region",
+      "elements": {
+        "Country": {
+          "key": true,
+          "type": "cds.String",
+          "length": 3,
+          "doc": "The country key contains information which the system uses to check entries such as the length of the postal code or bank account number.\n\nThe two-character ISO code in accordance with ISO 3166, which is delivered by SAP as a default, is usually used.It could also be the vehicle license plate country-code or a typical country key, for example, in Germany the Federal statistics office key.The country keys are determined at system installation in the global settings.The definition of the country key in the SAP system does not have to match political or government entities.Since the country key does not have to correspond to the ISO code in all installations, programs that differ according to certain values of the country key cannot query the country key T005-LAND1, but have to program based on the ISO code T005 INTCA.",
+          "@sap.display.format": "UpperCase",
+          "@sap.label": "Country Key"
+        },
+        "CountryCurrency": {
+          "type": "cds.String",
+          "length": 5,
+          "doc": "Key for the country currency.\n\nIf the tax amounts for particular codes are reported in a country other than the company code country, then it is necessary to translate them into the corresponding country currency. The currency key specified here is used for this translation.The &quot;Plants abroad&quot; parameter must be active in order to use this field.",
+          "@sap.label": "Country Currency",
+          "@sap.semantics": "currency-code"
+        },
+        "IndexBasedCurrency": {
+          "type": "cds.String",
+          "length": 5,
+          "doc": "Specifies the country-specific, fictitious currency.\n\nAn index-based currency is stipulated for external reporting (for example, tax returns), in some countries with high inflation.",
+          "@sap.label": "Index-Based Currency",
+          "@sap.quickinfo": "Currency Key of the Index-Based Currency",
+          "@sap.semantics": "currency-code"
+        },
+        "HardCurrency": {
+          "type": "cds.String",
+          "length": 5,
+          "doc": "Specifies the country-specific second currency.\n\nA hard currency is used in countries with high inflation.",
+          "@sap.label": "Hard Currency",
+          "@sap.quickinfo": "Currency Key of the Hard Currency",
+          "@sap.semantics": "currency-code"
+        },
+        "TaxCalculationProcedure": {
+          "type": "cds.String",
+          "length": 6,
+          "doc": "Specifies the conditions that are allowed for a document and defines the sequence in which they are used.\n\nProcedures are used, for example, in the following applications:Pricing in Sales and DistributionAccount determinationCalculating taxes on sales/purchases",
+          "@sap.display.format": "UpperCase",
+          "@sap.label": "Procedure",
+          "@sap.quickinfo": "Procedure (Pricing, Output Control, Acct. Det., Costing,...)"
+        },
+        "CountryThreeLetterISOCode": {
+          "type": "cds.String",
+          "length": 3,
+          "doc": "International standardized 3-character country key\n\nThe key is used, e.g. for data exchange with banks via OFX (Open Financial Exchange).It is not the same as the more commonly used 2-character ISO country code or the 3-character numeric INTRASTAT country code.Enter the 3-character ISO country code for all countries if you want to exchange data with banks via OFX.",
+          "@sap.display.format": "UpperCase",
+          "@sap.label": "ISO Code 3 Char",
+          "@sap.quickinfo": "ISO country code 3 char"
+        },
+        "CountryThreeDigitISOCode": {
+          "type": "cds.String",
+          "length": 3,
+          "doc": "3-character numeric ISO country code\n\nThis 3-character numeric ISO country code is listed for all countries, for example, in the Internet under the address http://www.un.org/Depts/unsd/methods/m49alpha.htm.The code is not to be confused with the 2-character ISO country code, which is more frequently used, the 3-character numeric INTRASTAT country code, or the 3-character non-numeric ISO country code.The use of this 3-character numeric ISO code is required by law in countries such as Romania and Croatia.",
+          "@sap.display.format": "NonNegative",
+          "@sap.label": "ISO Code Num. 3",
+          "@sap.quickinfo": "ISO Country Code Numeric 3-Characters"
+        },
+        "to_Text": {
+          "@cds.ambiguous": "missing on condition?",
+          "type": "cds.Association",
+          "target": "API_COUNTRY_SRV.A_CountryText",
+          "cardinality": {
+            "max": "*"
+          },
+          "keys": []
+        }
+      }
+    },
+    "API_COUNTRY_SRV.A_CountryText": {
+      "kind": "entity",
+      "@cds.persistence.skip": true,
+      "@sap.creatable": "false",
+      "@sap.updatable": "false",
+      "@sap.deletable": "false",
+      "@sap.content.version": "1",
+      "@sap.label": "Country/Region Text",
+      "elements": {
+        "Country": {
+          "key": true,
+          "type": "cds.String",
+          "length": 3,
+          "doc": "The country key contains information which the system uses to check entries such as the length of the postal code or bank account number.\n\nThe two-character ISO code in accordance with ISO 3166, which is delivered by SAP as a default, is usually used.It could also be the vehicle license plate country-code or a typical country key, for example, in Germany the Federal statistics office key.The country keys are determined at system installation in the global settings.The definition of the country key in the SAP system does not have to match political or government entities.Since the country key does not have to correspond to the ISO code in all installations, programs that differ according to certain values of the country key cannot query the country key T005-LAND1, but have to program based on the ISO code T005 INTCA.",
+          "@sap.display.format": "UpperCase",
+          "@sap.label": "Country Key"
+        },
+        "Language": {
+          "key": true,
+          "type": "cds.String",
+          "length": 2,
+          "doc": "The language key indicates\n\n- the language in which texts are displayed,- the language in which you enter texts,- the language in which the system prints texts.",
+          "@sap.label": "Language Key"
+        },
+        "CountryName": {
+          "type": "cds.String",
+          "length": 50,
+          "doc": "Tthe country description (short form)\n\nThe country description is used in the address format and on the user interface instead of the country key, or in addition to the country key.There are two fields for the country description. This fifty-character field, and a shorter fifteen-character field.Both fields contain the short description of the country, according to ISO 3166-1.For some countries, the fifteen-character field contains only a shortened form of the description, due to the field length.The fifty-character field contains the short description without abbreviations (but not the official, complete country name).",
+          "@sap.label": "Country Name"
+        },
+        "NationalityName": {
+          "type": "cds.String",
+          "length": 15,
+          "@sap.label": "Nationality"
+        },
+        "NationalityLongName": {
+          "type": "cds.String",
+          "length": 50,
+          "@sap.label": "Nationality (Long)",
+          "@sap.quickinfo": "Nationality (Max. 50 Characters)"
+        },
+        "to_Country": {
+          "@cds.ambiguous": "missing on condition?",
+          "type": "cds.Association",
+          "target": "API_COUNTRY_SRV.A_Country",
+          "keys": []
+        }
+      }
+    }
+  }
+}

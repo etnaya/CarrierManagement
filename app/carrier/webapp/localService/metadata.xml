@@ -1,0 +1,195 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="4.0" xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx">
+    <edmx:Reference Uri="https://sap.github.io/odata-vocabularies/vocabularies/Common.xml">
+        <edmx:Include Alias="Common" Namespace="com.sap.vocabularies.Common.v1"/>
+    </edmx:Reference>
+    <edmx:Reference Uri="https://oasis-tcs.github.io/odata-vocabularies/vocabularies/Org.OData.Core.V1.xml">
+        <edmx:Include Alias="Core" Namespace="Org.OData.Core.V1"/>
+    </edmx:Reference>
+    <edmx:Reference Uri="https://sap.github.io/odata-vocabularies/vocabularies/UI.xml">
+        <edmx:Include Alias="UI" Namespace="com.sap.vocabularies.UI.v1"/>
+    </edmx:Reference>
+    <edmx:DataServices>
+        <Schema Namespace="CarrierService" xmlns="http://docs.oasis-open.org/odata/ns/edm">
+            <EntityContainer Name="EntityContainer">
+                <EntitySet Name="Carriers" EntityType="CarrierService.Carriers">
+                    <NavigationPropertyBinding Path="credit" Target="Credits"/>
+                </EntitySet>
+                <EntitySet Name="Credits" EntityType="CarrierService.Credits">
+                    <NavigationPropertyBinding Path="carriers" Target="Carriers"/>
+                    <NavigationPropertyBinding Path="SiblingEntity" Target="Credits"/>
+                </EntitySet>
+            </EntityContainer>
+            <EntityType Name="Carriers">
+                <Key>
+                    <PropertyRef Name="ID"/>
+                </Key>
+                <Property Name="createdAt" Type="Edm.DateTimeOffset" Precision="7"/>
+                <Property Name="createdBy" Type="Edm.String" MaxLength="255"/>
+                <Property Name="modifiedAt" Type="Edm.DateTimeOffset" Precision="7"/>
+                <Property Name="modifiedBy" Type="Edm.String" MaxLength="255"/>
+                <Property Name="ID" Type="Edm.Guid" Nullable="false"/>
+                <Property Name="carrid" Type="Edm.String" MaxLength="3"/>
+                <Property Name="carrname" Type="Edm.String" MaxLength="20"/>
+                <Property Name="schedules" Type="Edm.Int32"/>
+                <NavigationProperty Name="credit" Type="CarrierService.Credits" Partner="carriers">
+                    <ReferentialConstraint Property="credit_ID" ReferencedProperty="ID"/>
+                </NavigationProperty>
+                <Property Name="credit_ID" Type="Edm.Guid"/>
+                <Property Name="currcode" Type="Edm.String" MaxLength="3"/>
+                <Property Name="url" Type="Edm.String" MaxLength="64"/>
+            </EntityType>
+            <EntityType Name="Credits">
+                <Key>
+                    <PropertyRef Name="ID"/>
+                    <PropertyRef Name="IsActiveEntity"/>
+                </Key>
+                <Property Name="createdAt" Type="Edm.DateTimeOffset" Precision="7"/>
+                <Property Name="createdBy" Type="Edm.String" MaxLength="255"/>
+                <Property Name="modifiedAt" Type="Edm.DateTimeOffset" Precision="7"/>
+                <Property Name="modifiedBy" Type="Edm.String" MaxLength="255"/>
+                <Property Name="ID" Type="Edm.Guid" Nullable="false"/>
+                <Property Name="grade" Type="Edm.String" MaxLength="1"/>
+                <Property Name="descr" Type="Edm.String"/>
+                <NavigationProperty Name="carriers" Type="Collection(CarrierService.Carriers)" Partner="credit"/>
+                <Property Name="IsActiveEntity" Type="Edm.Boolean" Nullable="false" DefaultValue="true"/>
+                <Property Name="HasActiveEntity" Type="Edm.Boolean" Nullable="false" DefaultValue="false"/>
+                <Property Name="HasDraftEntity" Type="Edm.Boolean" Nullable="false" DefaultValue="false"/>
+                <NavigationProperty Name="DraftAdministrativeData" Type="CarrierService.DraftAdministrativeData" ContainsTarget="true"/>
+                <NavigationProperty Name="SiblingEntity" Type="CarrierService.Credits"/>
+            </EntityType>
+            <EntityType Name="DraftAdministrativeData">
+                <Key>
+                    <PropertyRef Name="DraftUUID"/>
+                </Key>
+                <Property Name="DraftUUID" Type="Edm.Guid" Nullable="false"/>
+                <Property Name="CreationDateTime" Type="Edm.DateTimeOffset" Precision="7"/>
+                <Property Name="CreatedByUser" Type="Edm.String" MaxLength="256"/>
+                <Property Name="DraftIsCreatedByMe" Type="Edm.Boolean"/>
+                <Property Name="LastChangeDateTime" Type="Edm.DateTimeOffset" Precision="7"/>
+                <Property Name="LastChangedByUser" Type="Edm.String" MaxLength="256"/>
+                <Property Name="InProcessByUser" Type="Edm.String" MaxLength="256"/>
+                <Property Name="DraftIsProcessedByMe" Type="Edm.Boolean"/>
+            </EntityType>
+            <Action Name="draftPrepare" IsBound="true" EntitySetPath="in">
+                <Parameter Name="in" Type="CarrierService.Credits"/>
+                <Parameter Name="SideEffectsQualifier" Type="Edm.String"/>
+                <ReturnType Type="CarrierService.Credits"/>
+            </Action>
+            <Action Name="draftActivate" IsBound="true" EntitySetPath="in">
+                <Parameter Name="in" Type="CarrierService.Credits"/>
+                <ReturnType Type="CarrierService.Credits"/>
+            </Action>
+            <Action Name="draftEdit" IsBound="true" EntitySetPath="in">
+                <Parameter Name="in" Type="CarrierService.Credits"/>
+                <Parameter Name="PreserveChanges" Type="Edm.Boolean"/>
+                <ReturnType Type="CarrierService.Credits"/>
+            </Action>
+            <Annotations Target="CarrierService.Carriers/createdAt">
+                <Annotation Term="UI.HiddenFilter" Bool="true"/>
+                <Annotation Term="Core.Immutable" Bool="true"/>
+                <Annotation Term="Core.Computed" Bool="true"/>
+                <Annotation Term="Common.Label" String="{i18n>CreatedAt}"/>
+                </Annotations>
+                <Annotations Target="CarrierService.Carriers/createdBy">
+                    <Annotation Term="UI.HiddenFilter" Bool="true"/>
+                    <Annotation Term="Core.Immutable" Bool="true"/>
+                    <Annotation Term="Core.Computed" Bool="true"/>
+                    <Annotation Term="Core.Description" String="{i18n>UserID.Description}"/>
+                        <Annotation Term="Common.Label" String="{i18n>CreatedBy}"/>
+                        </Annotations>
+                        <Annotations Target="CarrierService.Carriers/modifiedAt">
+                            <Annotation Term="UI.HiddenFilter" Bool="true"/>
+                            <Annotation Term="Core.Computed" Bool="true"/>
+                            <Annotation Term="Common.Label" String="{i18n>ChangedAt}"/>
+                            </Annotations>
+                            <Annotations Target="CarrierService.Carriers/modifiedBy">
+                                <Annotation Term="UI.HiddenFilter" Bool="true"/>
+                                <Annotation Term="Core.Computed" Bool="true"/>
+                                <Annotation Term="Core.Description" String="{i18n>UserID.Description}"/>
+                                    <Annotation Term="Common.Label" String="{i18n>ChangedBy}"/>
+                                    </Annotations>
+                                    <Annotations Target="CarrierService.Carriers/ID">
+                                        <Annotation Term="Core.Computed" Bool="true"/>
+                                    </Annotations>
+                                    <Annotations Target="CarrierService.EntityContainer/Credits">
+                                        <Annotation Term="Common.DraftRoot">
+                                            <Record Type="Common.DraftRootType">
+                                                <PropertyValue Property="ActivationAction" String="CarrierService.draftActivate"/>
+                                                <PropertyValue Property="EditAction" String="CarrierService.draftEdit"/>
+                                                <PropertyValue Property="PreparationAction" String="CarrierService.draftPrepare"/>
+                                            </Record>
+                                        </Annotation>
+                                    </Annotations>
+                                    <Annotations Target="CarrierService.Credits/createdAt">
+                                        <Annotation Term="UI.HiddenFilter" Bool="true"/>
+                                        <Annotation Term="Core.Immutable" Bool="true"/>
+                                        <Annotation Term="Core.Computed" Bool="true"/>
+                                        <Annotation Term="Common.Label" String="{i18n>CreatedAt}"/>
+                                        </Annotations>
+                                        <Annotations Target="CarrierService.Credits/createdBy">
+                                            <Annotation Term="UI.HiddenFilter" Bool="true"/>
+                                            <Annotation Term="Core.Immutable" Bool="true"/>
+                                            <Annotation Term="Core.Computed" Bool="true"/>
+                                            <Annotation Term="Core.Description" String="{i18n>UserID.Description}"/>
+                                                <Annotation Term="Common.Label" String="{i18n>CreatedBy}"/>
+                                                </Annotations>
+                                                <Annotations Target="CarrierService.Credits/modifiedAt">
+                                                    <Annotation Term="UI.HiddenFilter" Bool="true"/>
+                                                    <Annotation Term="Core.Computed" Bool="true"/>
+                                                    <Annotation Term="Common.Label" String="{i18n>ChangedAt}"/>
+                                                    </Annotations>
+                                                    <Annotations Target="CarrierService.Credits/modifiedBy">
+                                                        <Annotation Term="UI.HiddenFilter" Bool="true"/>
+                                                        <Annotation Term="Core.Computed" Bool="true"/>
+                                                        <Annotation Term="Core.Description" String="{i18n>UserID.Description}"/>
+                                                            <Annotation Term="Common.Label" String="{i18n>ChangedBy}"/>
+                                                            </Annotations>
+                                                            <Annotations Target="CarrierService.Credits/ID">
+                                                                <Annotation Term="Core.Computed" Bool="true"/>
+                                                            </Annotations>
+                                                            <Annotations Target="CarrierService.Credits/IsActiveEntity">
+                                                                <Annotation Term="UI.Hidden" Bool="true"/>
+                                                            </Annotations>
+                                                            <Annotations Target="CarrierService.Credits/HasActiveEntity">
+                                                                <Annotation Term="UI.Hidden" Bool="true"/>
+                                                            </Annotations>
+                                                            <Annotations Target="CarrierService.Credits/HasDraftEntity">
+                                                                <Annotation Term="UI.Hidden" Bool="true"/>
+                                                            </Annotations>
+                                                            <Annotations Target="CarrierService.Credits/DraftAdministrativeData">
+                                                                <Annotation Term="UI.Hidden" Bool="true"/>
+                                                            </Annotations>
+                                                            <Annotations Target="CarrierService.DraftAdministrativeData">
+                                                                <Annotation Term="Common.Label" String="{i18n>Draft_DraftAdministrativeData}"/>
+                                                                </Annotations>
+                                                                <Annotations Target="CarrierService.DraftAdministrativeData/DraftUUID">
+                                                                    <Annotation Term="UI.Hidden" Bool="true"/>
+                                                                    <Annotation Term="Common.Label" String="{i18n>Draft_DraftUUID}"/>
+                                                                    </Annotations>
+                                                                    <Annotations Target="CarrierService.DraftAdministrativeData/CreationDateTime">
+                                                                        <Annotation Term="Common.Label" String="{i18n>Draft_CreationDateTime}"/>
+                                                                        </Annotations>
+                                                                        <Annotations Target="CarrierService.DraftAdministrativeData/CreatedByUser">
+                                                                            <Annotation Term="Common.Label" String="{i18n>Draft_CreatedByUser}"/>
+                                                                            </Annotations>
+                                                                            <Annotations Target="CarrierService.DraftAdministrativeData/DraftIsCreatedByMe">
+                                                                                <Annotation Term="UI.Hidden" Bool="true"/>
+                                                                                <Annotation Term="Common.Label" String="{i18n>Draft_DraftIsCreatedByMe}"/>
+                                                                                </Annotations>
+                                                                                <Annotations Target="CarrierService.DraftAdministrativeData/LastChangeDateTime">
+                                                                                    <Annotation Term="Common.Label" String="{i18n>Draft_LastChangeDateTime}"/>
+                                                                                    </Annotations>
+                                                                                    <Annotations Target="CarrierService.DraftAdministrativeData/LastChangedByUser">
+                                                                                        <Annotation Term="Common.Label" String="{i18n>Draft_LastChangedByUser}"/>
+                                                                                        </Annotations>
+                                                                                        <Annotations Target="CarrierService.DraftAdministrativeData/InProcessByUser">
+                                                                                            <Annotation Term="Common.Label" String="{i18n>Draft_InProcessByUser}"/>
+                                                                                            </Annotations>
+                                                                                            <Annotations Target="CarrierService.DraftAdministrativeData/DraftIsProcessedByMe">
+                                                                                                <Annotation Term="UI.Hidden" Bool="true"/>
+                                                                                                <Annotation Term="Common.Label" String="{i18n>Draft_DraftIsProcessedByMe}"/>
+                                                                                                </Annotations>
+                                                                                            </Schema>
+                                                                                        </edmx:DataServices>
+                                                                                    </edmx:Edmx>

@@ -1,0 +1,92 @@
+---
+_schema-version: '3.1'
+ID: carrier-management
+version: 1.0.0
+description: "A simple CAP project."
+parameters:
+  enable-parallel-deployments: true
+build-parameters:
+  before-all:
+    - builder: custom
+      commands:
+        - npm ci
+        - npx -p @sap/cds-dk cds build --production
+
+modules:
+  - name: carrier-management-srv
+    type: nodejs
+    path: gen/srv
+    parameters:
+      buildpack: nodejs_buildpack
+    build-parameters:
+      builder: npm-ci
+    provides:
+      - name: srv-api # required by consumers of CAP services (e.g. approuter)
+        properties:
+          srv-url: ${default-url}
+    requires:
+      - name: carrier-management-db
+      - name: carrier-management-xsuaa
+      - name: carrier-management-destination-service
+
+  - name: carrier-management-db-deployer
+    type: hdb
+    path: gen/db
+    parameters:
+      buildpack: nodejs_buildpack
+    requires:
+      - name: carrier-management-db
+      - name: carrier-management-xsuaa
+
+ # --------------------  APPROUTER -----------------------------
+  - name: carrier-management-approuter
+ # ------------------------------------------------------------
+    type: nodejs
+    path: approuter
+    requires:
+      - name: carrier-management-xsuaa
+      - name: srv-api
+        group: destinations
+        properties:
+          forwardAuthToken: true
+          strictSSL: true
+          name: srv-binding
+          url: "~{srv-url}"
+    build-parameters:
+      requires:
+        - name: carrier-management-app
+          artifacts:
+            - ./*
+          target-path: resources      
+
+  - name: carrier-management-app
+    type: html5
+    path: app
+    build-parameters:
+      supported-platforms: []
+
+resources:
+  - name: carrier-management-db
+    type: com.sap.xs.hdi-container
+    parameters:
+      service: hana # or 'hanatrial' on trial landscapes
+      service-plan: hdi-shared
+    properties:
+      hdi-service-name: ${service-name}
+
+  - name: carrier-management-xsuaa
+    type: org.cloudfoundry.managed-service
+    parameters:
+      service: xsuaa
+      service-plan: application
+      path: ./xs-security.json
+      config:
+        xsappname: carrier-management-${space}
+        tenant-mode: shared
+
+  - name: carrier-management-destination-service
+    type: org.cloudfoundry.managed-service
+    parameters:
+      service: destination
+      service-plan: lite
+
